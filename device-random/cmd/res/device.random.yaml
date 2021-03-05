@@ -1,0 +1,44 @@
+name: "Virtual Device"
+manufacturer: "KETI"
+model: "Virtual Device v1.0"
+labels:
+- "virtual-device"
+description: "Example of EdgeX Device"
+
+deviceResources:
+-
+  name: "Device_Data"
+  description: "Random value (0~100) sent from device"
+  properties:
+    value:
+      { type: "Int32", readWrite: "R", minimum: "0", maximum: "100", defaultValue: "0" }
+    units:
+      { type: "String", readWrite: "R", defaultValue: "0~100 random value" }
+
+-
+  name: "Device_Command"
+  description: "Command for device"
+  properties:
+    value:
+      {type: "String", readWrite: "R", defaultValue: "Command" }            
+
+deviceCommands:
+-
+  name: "SendCommand"
+  set:
+  - { operation: "set", deviceResource: "Device_Command", parameter: "[]" }
+
+coreCommands:
+-
+  name: "SendCommand"
+  put:
+    path: "/api/v1/device/{deviceId}/SendCommand"
+    parameterNames: ["Device_Command"]
+    responses:
+    -
+      code: "200"
+      description: ""
+    -
+      code: "503"
+      description: "service unavailable"
+
